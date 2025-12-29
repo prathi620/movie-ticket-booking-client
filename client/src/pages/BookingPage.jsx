@@ -225,7 +225,23 @@ const BookingPage = () => {
         }
     };
 
+    const now = new Date();
     if (!showtime) return <div className="text-center mt-20">Loading...</div>;
+
+    if (new Date(showtime.startTime) < now) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen">
+                <h2 className="text-2xl font-bold text-red-500 mb-4">Showtime Expired</h2>
+                <p className="text-gray-400 mb-6">This showtime has already started or ended.</p>
+                <button
+                    onClick={() => navigate(`/movie/${showtime.movie._id}`)}
+                    className="px-6 py-2 bg-indigo-600 rounded-lg text-white"
+                >
+                    Back to Movie
+                </button>
+            </div>
+        );
+    }
 
     const totalPrice = selectedSeats.reduce((acc, s) => acc + s.price, 0);
 
