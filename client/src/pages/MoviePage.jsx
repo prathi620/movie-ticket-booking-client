@@ -34,9 +34,9 @@ const MoviePage = () => {
         const showtimeDate = new Date(showtime.startTime);
 
         // First, filter out past showtimes
-        if (showtimeDate < now) {
-            return false;
-        }
+        // if (showtimeDate < now) {
+        //     return false;
+        // }
 
         // Then apply view mode filters
         if (viewMode === 'calendar' && selectedDate) {
