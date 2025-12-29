@@ -13,6 +13,7 @@ const MoviePage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            setShowtimes([]); // Clear previous showtimes
             try {
                 const movieRes = await api.get(`/movies/${id}`);
                 setMovie(movieRes.data);
@@ -43,7 +44,7 @@ const MoviePage = () => {
             return showDate === selectedDate;
         }
         return true;
-    }).slice(0, 3);
+    });
 
     // Group filtered showtimes by theater
     const showtimesByTheater = filteredShowtimes.reduce((acc, showtime) => {
