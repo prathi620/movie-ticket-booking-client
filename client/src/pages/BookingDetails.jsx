@@ -11,6 +11,9 @@ const BookingDetails = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [cancelling, setCancelling] = useState(false);
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         fetchBookingDetails();
@@ -43,17 +46,17 @@ const BookingDetails = () => {
     };
 
     const handleCancelBooking = async () => {
-        if (!window.confirm('Are you sure you want to cancel this booking? This action cannot be undone.')) {
-            return;
-        }
-
         setCancelling(true);
+        setErrorMessage('');
         try {
             await bookingAPI.cancel(id);
-            alert('Booking cancelled successfully. Refund will be processed in 5-7 business days.');
-            navigate('/my-bookings');
+            setSuccessMessage('Booking cancelled successfully. Refund will be processed in 5-7 business days.');
+            setTimeout(() => {
+                navigate('/my-bookings');
+            }, 3000);
         } catch (err) {
-            alert(err.response?.data?.message || 'Failed to cancel booking');
+            setErrorMessage(err.response?.data?.message || 'Failed to cancel booking');
+            setShowConfirm(false);
         } finally {
             setCancelling(false);
         }
@@ -74,7 +77,16 @@ const BookingDetails = () => {
         <div className="min-h-screen bg-gray-50 py-8">
             <div className="max-w-4xl mx-auto px-4">
                 {/* Header */}
-                <div className="mb-6">
+                <div className="mb-6 relative">
+                    <button
+                        onClick={() => navigate('/')}
+                        className="absolute right-0 top-0 p-2 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors"
+                        title="Close"
+                    >
+                        <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                     <button
                         onClick={() => navigate('/my-bookings')}
                         className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 mb-4"
@@ -88,7 +100,7 @@ const BookingDetails = () => {
                 </div>
 
                 {/* Status Badge */}
-                <div className="mb-6">
+                <div className="flex justify-between items-center mb-6">
                     <span className={`
                         inline-block px-4 py-2 rounded-full text-sm font-semibold
                         ${booking.status === 'confirmed' ? 'bg-green-100 text-green-800' : ''}
@@ -98,6 +110,18 @@ const BookingDetails = () => {
                         {booking.status.toUpperCase()}
                     </span>
                 </div>
+
+                {successMessage && (
+                    <div className="mb-6 p-4 bg-green-100 text-green-700 border border-green-200 rounded-lg animate-fade-in">
+                        {successMessage}
+                    </div>
+                )}
+
+                {errorMessage && (
+                    <div className="mb-6 p-4 bg-red-100 text-red-700 border border-red-200 rounded-lg animate-fade-in">
+                        {errorMessage}
+                    </div>
+                )}
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Main Details */}
@@ -185,14 +209,36 @@ const BookingDetails = () => {
                                 Download Ticket (PDF)
                             </button>
 
-                            {canCancel && (
+                            {canCancel && !showConfirm && (
                                 <button
-                                    onClick={handleCancelBooking}
+                                    onClick={() => setShowConfirm(true)}
                                     disabled={cancelling}
                                     className="flex-1 min-w-[200px] px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    {cancelling ? 'Cancelling...' : 'Cancel Booking'}
+                                    Cancel Booking
                                 </button>
+                            )}
+
+                            {showConfirm && (
+                                <div className="flex-1 min-w-[300px] p-4 bg-red-50 border border-red-200 rounded-lg flex flex-col gap-3">
+                                    <p className="text-red-800 font-semibold">Are you sure you want to cancel this booking? This action cannot be undone.</p>
+                                    <div className="flex gap-3">
+                                        <button
+                                            onClick={handleCancelBooking}
+                                            disabled={cancelling}
+                                            className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors font-semibold disabled:opacity-50"
+                                        >
+                                            {cancelling ? 'Cancelling...' : 'Yes, Cancel'}
+                                        </button>
+                                        <button
+                                            onClick={() => setShowConfirm(false)}
+                                            disabled={cancelling}
+                                            className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors font-semibold disabled:opacity-50"
+                                        >
+                                            No, Keep it
+                                        </button>
+                                    </div>
+                                </div>
                             )}
                         </div>
                     </div>
