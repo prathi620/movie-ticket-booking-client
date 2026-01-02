@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from 'react-qr-code';
 import { bookingAPI } from '../services/api';
 import Loading from '../components/Loading';
+import { ArrowLeft } from 'lucide-react';
 
 const BookingDetails = () => {
     const { id } = useParams();
@@ -76,18 +77,19 @@ const BookingDetails = () => {
     return (
         <div className="min-h-screen bg-gray-50 py-8">
             <div className="max-w-4xl mx-auto px-4">
+                {/* Back Button (Fixed) */}
+                <button
+                    onClick={() => navigate('/my-bookings')}
+                    className="fixed top-6 left-6 z-50 bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-lg flex items-center gap-2 text-white transition-all shadow-xl group font-semibold"
+                >
+                    <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                    <span>Back to My Bookings</span>
+                </button>
+
                 {/* Header */}
                 <div className="mb-6">
                     <div className="flex justify-between items-start mb-4">
-                        <button
-                            onClick={() => navigate('/my-bookings')}
-                            className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 font-medium transition-colors"
-                        >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                            </svg>
-                            Back to My Bookings
-                        </button>
+                        <div className="flex-1"></div> {/* Spacer to push Close button to right */}
                         <button
                             onClick={() => navigate('/')}
                             className="p-2 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors"
@@ -98,7 +100,7 @@ const BookingDetails = () => {
                             </svg>
                         </button>
                     </div>
-                    <h1 className="text-3xl font-bold text-gray-900">Booking Details</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 mt-[-3rem] pl-2">Booking Details</h1>
                 </div>
 
                 {/* Status Badge */}
