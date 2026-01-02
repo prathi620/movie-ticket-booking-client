@@ -20,7 +20,7 @@ const MyBookings = () => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-black text-white px-4 py-8">
+        <div className="min-h-screen bg-black text-white px-4 pt-24 pb-8">
             <div className="max-w-6xl mx-auto">
                 {/* Back Button */}
                 <button
