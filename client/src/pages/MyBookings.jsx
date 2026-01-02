@@ -25,10 +25,10 @@ const MyBookings = () => {
                 {/* Back Button */}
                 <button
                     onClick={() => navigate('/')}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-white/80 hover:text-white hover:bg-black/50 transition-all duration-300 mb-8 group border border-transparent hover:border-white/10"
+                    className="fixed top-6 left-6 z-50 bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-lg flex items-center gap-2 text-white transition-all shadow-xl group font-semibold"
                 >
                     <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                    <span className="font-medium">Back to Home</span>
+                    <span>Back to Home</span>
                 </button>
 
                 <h1 className="text-4xl font-bold mb-8 text-white tracking-tight">My Bookings</h1>
