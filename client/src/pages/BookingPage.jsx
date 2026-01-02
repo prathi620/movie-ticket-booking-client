@@ -246,166 +246,169 @@ const BookingPage = () => {
     const totalPrice = selectedSeats.reduce((acc, s) => acc + s.price, 0);
 
     return (
-        <div className="max-w-7xl mx-auto px-6 py-8 relative min-h-screen">
-            {/* Back Button */}
-            <button
-                onClick={() => navigate(`/movie/${showtime.movie._id}`)}
-                className="fixed top-6 left-6 z-50 bg-black/50 backdrop-blur-md px-4 py-2 rounded-full flex items-center gap-2 text-white hover:bg-black/80 transition-all border border-white/10 shadow-lg group"
-            >
-                <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                <span className="font-medium">Back</span>
-            </button>
-
-            <h1 className="text-3xl font-bold mb-2">{showtime.movie.title}</h1>
-            <p className="text-gray-400 mb-8">{showtime.theater.name} - {showtime.screenName} | {new Date(showtime.startTime).toLocaleString()}</p>
-
-            <div className="bg-gray-900 p-8 rounded-2xl border border-gray-800 mb-8 flex justify-center">
-                <SeatingChart
-                    seats={showtime.seats}
-                    selectedSeats={selectedSeats}
-                    onSeatSelect={handleSeatSelect}
-                />
-            </div>
-
-            <div className="bg-black/90 p-8 rounded-2xl border border-gray-700 flex justify-between items-center shadow-2xl h-32">
-                <div>
-                    <p className="text-gray-400 text-lg mb-1">Selected Seats</p>
-                    <p className="text-2xl font-bold text-white tracking-wide">{selectedSeats.length > 0 ? selectedSeats.map(s => s.seatNumber).join(', ') : 'None'}</p>
-                </div>
-                <div className="text-center px-8 border-x border-gray-700">
-                    <p className="text-gray-400 text-lg mb-1">Total Price</p>
-                    <p className="text-4xl font-extrabold text-red-500">₹{totalPrice}</p>
-                </div>
+        <div className="min-h-screen bg-black text-white px-6 pt-24 pb-8">
+            <div className="max-w-7xl mx-auto relative">
+                {/* Back Button */}
                 <button
-                    onClick={handleBookClick}
-                    disabled={selectedSeats.length === 0 || loading}
-                    className={`h-16 px-10 rounded-xl font-bold text-xl text-white transition-all transform hover:scale-105 shadow-lg ${selectedSeats.length === 0
-                        ? 'bg-gray-800 opacity-50 cursor-not-allowed'
-                        : 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600'
-                        }`}
+                    onClick={() => navigate(`/movie/${showtime.movie._id}`)}
+                    className="fixed top-6 left-6 z-50 bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-lg flex items-center gap-2 text-white transition-all shadow-xl group font-semibold"
                 >
-                    {loading ? 'Processing...' : 'Proceed to Book'}
+                    <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                    <span>Back to Movie</span>
                 </button>
-            </div>
-            <div className="h-12"></div>
 
-            {/* Payment Method Selection Modal */}
-            {showMethodSelection && (
-                <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-                    <div className="bg-gray-900 rounded-2xl w-full max-w-md p-6 border border-gray-800">
-                        <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-xl font-bold text-white">Select Payment Method</h2>
-                            <button onClick={() => setShowMethodSelection(false)} className="p-2 hover:bg-gray-800 rounded-lg text-gray-400">
-                                <X className="w-5 h-5" />
-                            </button>
-                        </div>
 
-                        <div className="space-y-3">
-                            <button
-                                onClick={() => initiateBooking('card')}
-                                className="w-full p-4 rounded-xl border border-gray-700 bg-gray-800/50 hover:bg-gray-800 hover:border-primary flex items-center justify-between group transition-all"
-                            >
-                                <span className="font-medium text-white">Credit/Debit Card</span>
-                                <span className="text-gray-500 group-hover:text-primary">&rarr;</span>
-                            </button>
-                            <button
-                                onClick={() => initiateBooking('upi')}
-                                className="w-full p-4 rounded-xl border border-gray-700 bg-gray-800/50 hover:bg-gray-800 hover:border-primary flex items-center justify-between group transition-all"
-                            >
-                                <span className="font-medium text-white">UPI / GPay</span>
-                                <span className="text-gray-500 group-hover:text-primary">&rarr;</span>
-                            </button>
+                <h1 className="text-3xl font-bold mb-2">{showtime.movie.title}</h1>
+                <p className="text-gray-400 mb-8">{showtime.theater.name} - {showtime.screenName} | {new Date(showtime.startTime).toLocaleString()}</p>
 
-                        </div>
-                    </div>
+                <div className="bg-gray-900 p-8 rounded-2xl border border-gray-800 mb-8 flex justify-center">
+                    <SeatingChart
+                        seats={showtime.seats}
+                        selectedSeats={selectedSeats}
+                        onSeatSelect={handleSeatSelect}
+                    />
                 </div>
-            )}
 
-            {/* Payment Modal */}
-            {showPaymentModal && clientSecret && (
-                <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-                    <div className="bg-gray-900 rounded-2xl w-full max-w-md p-6 border border-gray-800">
-                        <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-xl font-bold">Secure Payment</h2>
-                            <button onClick={() => setShowPaymentModal(false)} className="p-2 hover:bg-gray-800 rounded-lg">
-                                <X className="w-5 h-5" />
-                            </button>
-                        </div>
-
-                        <Elements options={{ clientSecret, appearance: { theme: 'night' } }} stripe={stripePromise}>
-                            <CheckoutForm
-                                clientSecret={clientSecret}
-                                amount={totalPrice}
-                                onSuccess={(paymentIntentId) => finalizeBooking({ ...pendingBookingData, paymentIntentId })}
-                                onCancel={() => setShowPaymentModal(false)}
-                            />
-                        </Elements>
+                <div className="bg-black/90 p-8 rounded-2xl border border-gray-700 flex justify-between items-center shadow-2xl h-32">
+                    <div>
+                        <p className="text-gray-400 text-lg mb-1">Selected Seats</p>
+                        <p className="text-2xl font-bold text-white tracking-wide">{selectedSeats.length > 0 ? selectedSeats.map(s => s.seatNumber).join(', ') : 'None'}</p>
                     </div>
+                    <div className="text-center px-8 border-x border-gray-700">
+                        <p className="text-gray-400 text-lg mb-1">Total Price</p>
+                        <p className="text-4xl font-extrabold text-red-500">₹{totalPrice}</p>
+                    </div>
+                    <button
+                        onClick={handleBookClick}
+                        disabled={selectedSeats.length === 0 || loading}
+                        className={`h-16 px-10 rounded-xl font-bold text-xl text-white transition-all transform hover:scale-105 shadow-lg ${selectedSeats.length === 0
+                            ? 'bg-gray-800 opacity-50 cursor-not-allowed'
+                            : 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600'
+                            }`}
+                    >
+                        {loading ? 'Processing...' : 'Proceed to Book'}
+                    </button>
                 </div>
-            )}
+                <div className="h-12"></div>
 
-            {/* Simulated UPI Modal */}
-            {showUpiModal && (
-                <div className="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50">
-                    <div className="bg-white text-gray-900 rounded-xl w-full max-w-sm p-6 relative">
-                        <button
-                            onClick={() => setShowUpiModal(false)}
-                            className="absolute top-4 right-4 text-gray-500 hover:text-gray-900"
-                        >
-                            <X className="w-5 h-5" />
-                        </button>
-
-                        <div className="text-center mb-6">
-                            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                <svg className="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" />
-                                </svg>
-                            </div>
-                            <h3 className="text-xl font-bold">UPI Payment</h3>
-                            <p className="text-sm text-gray-500">Google Pay / PhonePe / Paytm</p>
-                        </div>
-
-                        {upiStep === 'input' && (
-                            <form onSubmit={handleUpiSubmit} className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Enter UPI ID</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        placeholder="example@oksbi"
-                                        value={upiId}
-                                        onChange={(e) => setUpiId(e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                                    />
-                                </div>
-                                <button type="submit" className="w-full py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition">
-                                    Verify & Pay ₹{totalPrice}
+                {/* Payment Method Selection Modal */}
+                {showMethodSelection && (
+                    <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
+                        <div className="bg-gray-900 rounded-2xl w-full max-w-md p-6 border border-gray-800">
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-xl font-bold text-white">Select Payment Method</h2>
+                                <button onClick={() => setShowMethodSelection(false)} className="p-2 hover:bg-gray-800 rounded-lg text-gray-400">
+                                    <X className="w-5 h-5" />
                                 </button>
-                            </form>
-                        )}
-
-                        {upiStep === 'processing' && (
-                            <div className="text-center py-8">
-                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                                <h4 className="font-semibold text-lg">Waiting for confirmation...</h4>
-                                <p className="text-gray-500 text-sm mt-2">Open your Payment App and approve the request.</p>
                             </div>
-                        )}
 
-                        {upiStep === 'success' && (
-                            <div className="text-center py-8">
-                                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            <div className="space-y-3">
+                                <button
+                                    onClick={() => initiateBooking('card')}
+                                    className="w-full p-4 rounded-xl border border-gray-700 bg-gray-800/50 hover:bg-gray-800 hover:border-primary flex items-center justify-between group transition-all"
+                                >
+                                    <span className="font-medium text-white">Credit/Debit Card</span>
+                                    <span className="text-gray-500 group-hover:text-primary">&rarr;</span>
+                                </button>
+                                <button
+                                    onClick={() => initiateBooking('upi')}
+                                    className="w-full p-4 rounded-xl border border-gray-700 bg-gray-800/50 hover:bg-gray-800 hover:border-primary flex items-center justify-between group transition-all"
+                                >
+                                    <span className="font-medium text-white">UPI / GPay</span>
+                                    <span className="text-gray-500 group-hover:text-primary">&rarr;</span>
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Payment Modal */}
+                {showPaymentModal && clientSecret && (
+                    <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
+                        <div className="bg-gray-900 rounded-2xl w-full max-w-md p-6 border border-gray-800">
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-xl font-bold">Secure Payment</h2>
+                                <button onClick={() => setShowPaymentModal(false)} className="p-2 hover:bg-gray-800 rounded-lg">
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
+
+                            <Elements options={{ clientSecret, appearance: { theme: 'night' } }} stripe={stripePromise}>
+                                <CheckoutForm
+                                    clientSecret={clientSecret}
+                                    amount={totalPrice}
+                                    onSuccess={(paymentIntentId) => finalizeBooking({ ...pendingBookingData, paymentIntentId })}
+                                    onCancel={() => setShowPaymentModal(false)}
+                                />
+                            </Elements>
+                        </div>
+                    </div>
+                )}
+
+                {/* Simulated UPI Modal */}
+                {showUpiModal && (
+                    <div className="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50">
+                        <div className="bg-white text-gray-900 rounded-xl w-full max-w-sm p-6 relative">
+                            <button
+                                onClick={() => setShowUpiModal(false)}
+                                className="absolute top-4 right-4 text-gray-500 hover:text-gray-900"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+
+                            <div className="text-center mb-6">
+                                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <svg className="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" />
                                     </svg>
                                 </div>
-                                <h4 className="font-bold text-xl text-green-600">Payment Successful!</h4>
-                                <p className="text-gray-500 text-sm">Redirecting...</p>
+                                <h3 className="text-xl font-bold">UPI Payment</h3>
+                                <p className="text-sm text-gray-500">Google Pay / PhonePe / Paytm</p>
                             </div>
-                        )}
+
+                            {upiStep === 'input' && (
+                                <form onSubmit={handleUpiSubmit} className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Enter UPI ID</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            placeholder="example@oksbi"
+                                            value={upiId}
+                                            onChange={(e) => setUpiId(e.target.value)}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                                        />
+                                    </div>
+                                    <button type="submit" className="w-full py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition">
+                                        Verify & Pay ₹{totalPrice}
+                                    </button>
+                                </form>
+                            )}
+
+                            {upiStep === 'processing' && (
+                                <div className="text-center py-8">
+                                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                                    <h4 className="font-semibold text-lg">Waiting for confirmation...</h4>
+                                    <p className="text-gray-500 text-sm mt-2">Open your Payment App and approve the request.</p>
+                                </div>
+                            )}
+
+                            {upiStep === 'success' && (
+                                <div className="text-center py-8">
+                                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </div>
+                                    <h4 className="font-bold text-xl text-green-600">Payment Successful!</h4>
+                                    <p className="text-gray-500 text-sm">Redirecting...</p>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 };
