@@ -8,12 +8,14 @@ const MoviePage = () => {
     const navigate = useNavigate();
     const [movie, setMovie] = useState(null);
     const [showtimes, setShowtimes] = useState([]);
+    const [loadingShowtimes, setLoadingShowtimes] = useState(true);
     const [viewMode, setViewMode] = useState('list'); // 'list' or 'calendar'
     const [selectedDate, setSelectedDate] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
             setShowtimes([]); // Clear previous showtimes
+            setLoadingShowtimes(true);
             try {
                 const movieRes = await api.get(`/movies/${id}`);
                 setMovie(movieRes.data);
@@ -21,6 +23,8 @@ const MoviePage = () => {
                 setShowtimes(showtimeRes.data);
             } catch (error) {
                 console.error(error);
+            } finally {
+                setLoadingShowtimes(false);
             }
         };
         fetchData();
@@ -151,71 +155,79 @@ const MoviePage = () => {
 
                                 {/* Showtimes Content */}
                                 <div className="space-y-8">
-                                    {/* LIST VIEW */}
-                                    {viewMode === 'list' && (
-                                        Object.keys(showtimesByTheater).length > 0 ? (
-                                            Object.entries(showtimesByTheater).map(([theaterName, theaterShowtimes]) => (
-                                                <div key={theaterName} className="border border-gray-700 rounded-xl p-10 bg-[#1a1d29] shadow-sm">
-                                                    <h4 className="text-xl font-bold text-white mb-8">{theaterName}</h4>
-                                                    <div className="space-y-5">
-                                                        {theaterShowtimes.map(showtime => (
-                                                            <div key={showtime._id} className="flex flex-col md:flex-row justify-between items-center border border-gray-700 rounded-lg p-8 bg-gray-800 hover:bg-gray-750 transition-all">
-                                                                <div className="mb-4 md:mb-0">
-                                                                    <div className="text-gray-400 font-medium mb-1">
-                                                                        {showtime.theater.city} - {showtime.screenName}
+                                    {loadingShowtimes ? (
+                                        <div className="flex justify-center items-center py-20">
+                                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600"></div>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            {/* LIST VIEW */}
+                                            {viewMode === 'list' && (
+                                                Object.keys(showtimesByTheater).length > 0 ? (
+                                                    Object.entries(showtimesByTheater).map(([theaterName, theaterShowtimes]) => (
+                                                        <div key={theaterName} className="border border-gray-700 rounded-xl p-10 bg-[#1a1d29] shadow-sm">
+                                                            <h4 className="text-xl font-bold text-white mb-8">{theaterName}</h4>
+                                                            <div className="space-y-5">
+                                                                {theaterShowtimes.map(showtime => (
+                                                                    <div key={showtime._id} className="flex flex-col md:flex-row justify-between items-center border border-gray-700 rounded-lg p-8 bg-gray-800 hover:bg-gray-750 transition-all">
+                                                                        <div className="mb-4 md:mb-0">
+                                                                            <div className="text-gray-400 font-medium mb-1">
+                                                                                {showtime.theater.city} - {showtime.screenName}
+                                                                            </div>
+                                                                            <div className="text-blue-400 font-bold text-lg">
+                                                                                {new Date(showtime.startTime).toLocaleDateString()} , {new Date(showtime.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                                            </div>
+                                                                        </div>
+                                                                        <Link
+                                                                            to={`/booking/${showtime._id}`}
+                                                                            className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg transition-colors whitespace-nowrap shadow-sm"
+                                                                        >
+                                                                            Select Seats
+                                                                        </Link>
                                                                     </div>
-                                                                    <div className="text-blue-400 font-bold text-lg">
-                                                                        {new Date(showtime.startTime).toLocaleDateString()} , {new Date(showtime.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                                    </div>
-                                                                </div>
-                                                                <Link
-                                                                    to={`/booking/${showtime._id}`}
-                                                                    className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg transition-colors whitespace-nowrap shadow-sm"
-                                                                >
-                                                                    Select Seats
-                                                                </Link>
+                                                                ))}
                                                             </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <p className="text-gray-400 text-xl py-4">No showtimes available.</p>
-                                        )
-                                    )}
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <p className="text-gray-400 text-xl py-4">No showtimes available.</p>
+                                                )
+                                            )}
 
-                                    {/* CALENDAR VIEW */}
-                                    {viewMode === 'calendar' && (
-                                        Object.keys(showtimesByDate).length > 0 ? (
-                                            Object.entries(showtimesByDate).map(([date, dateShowtimes]) => (
-                                                <div key={date} className="border border-gray-700 rounded-xl p-10 bg-[#1a1d29] shadow-sm">
-                                                    <h4 className="text-xl font-bold text-white mb-8">{date}</h4>
-                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                        {dateShowtimes.map(showtime => (
-                                                            <div key={showtime._id} className="border border-gray-700 rounded-lg p-8 bg-gray-800 flex flex-col justify-between h-full hover:bg-gray-750 transition-all">
-                                                                <div className="mb-4">
-                                                                    <h5 className="font-bold text-lg text-white">{showtime.theater.name}</h5>
-                                                                    <p className="text-gray-400 text-sm">{showtime.theater.city} - {showtime.screenName}</p>
-                                                                </div>
-                                                                <div className="flex justify-between items-center mt-4">
-                                                                    <span className="text-blue-400 font-bold text-lg">
-                                                                        {new Date(showtime.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                                    </span>
-                                                                    <Link
-                                                                        to={`/booking/${showtime._id}`}
-                                                                        className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition-colors shadow-sm"
-                                                                    >
-                                                                        Book
-                                                                    </Link>
-                                                                </div>
+                                            {/* CALENDAR VIEW */}
+                                            {viewMode === 'calendar' && (
+                                                Object.keys(showtimesByDate).length > 0 ? (
+                                                    Object.entries(showtimesByDate).map(([date, dateShowtimes]) => (
+                                                        <div key={date} className="border border-gray-700 rounded-xl p-10 bg-[#1a1d29] shadow-sm">
+                                                            <h4 className="text-xl font-bold text-white mb-8">{date}</h4>
+                                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                                {dateShowtimes.map(showtime => (
+                                                                    <div key={showtime._id} className="border border-gray-700 rounded-lg p-8 bg-gray-800 flex flex-col justify-between h-full hover:bg-gray-750 transition-all">
+                                                                        <div className="mb-4">
+                                                                            <h5 className="font-bold text-lg text-white">{showtime.theater.name}</h5>
+                                                                            <p className="text-gray-400 text-sm">{showtime.theater.city} - {showtime.screenName}</p>
+                                                                        </div>
+                                                                        <div className="flex justify-between items-center mt-4">
+                                                                            <span className="text-blue-400 font-bold text-lg">
+                                                                                {new Date(showtime.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                                            </span>
+                                                                            <Link
+                                                                                to={`/booking/${showtime._id}`}
+                                                                                className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition-colors shadow-sm"
+                                                                            >
+                                                                                Book
+                                                                            </Link>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
                                                             </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <p className="text-gray-400 text-xl py-4">No showtimes available for the selected criteria.</p>
-                                        )
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <p className="text-gray-400 text-xl py-4">No showtimes available for the selected criteria.</p>
+                                                )
+                                            )}
+                                        </>
                                     )}
                                 </div>
                             </div>
