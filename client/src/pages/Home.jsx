@@ -5,6 +5,7 @@ import { Search, Calendar, X } from 'lucide-react';
 
 const Home = () => {
     const [movies, setMovies] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedGenre, setSelectedGenre] = useState('');
     const [selectedDate, setSelectedDate] = useState('');
@@ -12,10 +13,13 @@ const Home = () => {
     useEffect(() => {
         const fetchMovies = async () => {
             try {
+                setLoading(true);
                 const { data } = await api.get('/movies');
                 setMovies(data);
             } catch (error) {
                 console.error('Error fetching movies:', error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchMovies();
@@ -115,7 +119,11 @@ const Home = () => {
                 </div>
 
                 {/* Movie Grid */}
-                {filteredMovies.length > 0 ? (
+                {loading ? (
+                    <div className="flex justify-center items-center py-20">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600"></div>
+                    </div>
+                ) : filteredMovies.length > 0 ? (
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
                         {filteredMovies.map(movie => (
                             <MovieCard key={movie._id} movie={movie} />
