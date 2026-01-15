@@ -71,7 +71,7 @@ const MoviePage = () => {
 
     return (
         <div className="min-h-screen bg-[#1a1d29] pt-24 pb-16">
-            <div className="container mx-auto px-6 max-w-7xl">
+            <div className="container mx-auto px-4 md:px-6 max-w-7xl">
                 {/* Back Button */}
                 <button
                     onClick={() => navigate('/')}
@@ -82,8 +82,8 @@ const MoviePage = () => {
                 </button>
 
 
-                <div className="bg-[#0f1117] rounded-xl shadow-lg p-12 border border-gray-800">
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-16">
+                <div className="bg-[#0f1117] rounded-xl shadow-lg p-5 md:p-12 border border-gray-800">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16">
                         {/* Left Column: Poster */}
                         <div className="md:col-span-4 lg:col-span-3">
                             <img
@@ -241,3 +241,5 @@ const MoviePage = () => {
 };
 
 export default MoviePage;
+
+
