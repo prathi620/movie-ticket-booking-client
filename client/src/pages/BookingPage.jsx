@@ -269,19 +269,19 @@ const BookingPage = () => {
                     />
                 </div>
 
-                <div className="bg-black/90 p-8 rounded-2xl border border-gray-700 flex justify-between items-center shadow-2xl h-32">
-                    <div>
-                        <p className="text-gray-400 text-lg mb-1">Selected Seats</p>
-                        <p className="text-2xl font-bold text-white tracking-wide">{selectedSeats.length > 0 ? selectedSeats.map(s => s.seatNumber).join(', ') : 'None'}</p>
+                <div className="bg-black/90 p-4 md:p-8 rounded-2xl border border-gray-700 flex flex-col md:flex-row justify-between items-center shadow-2xl h-auto md:h-32 gap-4 md:gap-0 sticky bottom-4 z-30">
+                    <div className="w-full md:w-auto flex justify-between md:block items-center">
+                        <p className="text-gray-400 text-sm md:text-lg mb-0 md:mb-1">Selected Seats</p>
+                        <p className="text-xl md:text-2xl font-bold text-white tracking-wide">{selectedSeats.length > 0 ? selectedSeats.map(s => s.seatNumber).join(', ') : 'None'}</p>
                     </div>
-                    <div className="text-center px-8 border-x border-gray-700">
-                        <p className="text-gray-400 text-lg mb-1">Total Price</p>
-                        <p className="text-4xl font-extrabold text-red-500">₹{totalPrice}</p>
+                    <div className="w-full md:w-auto text-center px-0 md:px-8 border-t md:border-t-0 border-b md:border-b-0 md:border-x border-gray-700 py-2 md:py-0 flex justify-between md:block items-center">
+                        <p className="text-gray-400 text-sm md:text-lg mb-0 md:mb-1">Total Price</p>
+                        <p className="text-2xl md:text-4xl font-extrabold text-red-500">₹{totalPrice}</p>
                     </div>
                     <button
                         onClick={handleBookClick}
                         disabled={selectedSeats.length === 0 || loading}
-                        className={`h-16 px-10 rounded-xl font-bold text-xl text-white transition-all transform hover:scale-105 shadow-lg ${selectedSeats.length === 0
+                        className={`w-full md:w-auto h-12 md:h-16 px-10 rounded-xl font-bold text-lg md:text-xl text-white transition-all transform hover:scale-105 shadow-lg ${selectedSeats.length === 0
                             ? 'bg-gray-800 opacity-50 cursor-not-allowed'
                             : 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600'
                             }`}
