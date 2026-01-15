@@ -58,7 +58,7 @@ const Home = () => {
 
                 {/* Filter Bar */}
                 <div className="bg-[#0f1117] p-5 md:p-10 rounded-xl shadow-lg border border-gray-800 mb-10 md:mb-16">
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-end">
                         {/* Search Input */}
                         <div className="md:col-span-4 flex flex-col gap-2">
                             <label className="text-sm font-semibold text-gray-300">Search Movies</label>
@@ -124,7 +124,7 @@ const Home = () => {
                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600"></div>
                     </div>
                 ) : filteredMovies.length > 0 ? (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-8">
                         {filteredMovies.map(movie => (
                             <MovieCard key={movie._id} movie={movie} />
                         ))}
