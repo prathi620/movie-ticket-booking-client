@@ -249,19 +249,20 @@ const BookingPage = () => {
         <div className="min-h-screen bg-black text-white px-4 md:px-6 pt-24 pb-8">
             <div className="max-w-7xl mx-auto relative">
                 {/* Back Button */}
+                {/* Back Button */}
                 <button
                     onClick={() => navigate(`/movie/${showtime.movie._id}`)}
-                    className="md:fixed md:top-24 md:left-6 md:z-40 relative mb-6 w-fit bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-lg flex items-center gap-2 text-white transition-all shadow-xl group font-semibold"
+                    className="fixed top-4 left-4 z-40 md:top-24 md:left-6 w-10 h-10 md:w-auto md:h-auto md:px-6 md:py-3 rounded-full md:rounded-lg flex items-center justify-center md:justify-start gap-0 md:gap-2 bg-indigo-600/90 hover:bg-indigo-700 text-white transition-all shadow-xl backdrop-blur-sm group"
                 >
-                    <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                    <span>Back to Movie</span>
+                    <ArrowLeft className="w-5 h-5 md:group-hover:-translate-x-1 transition-transform" />
+                    <span className="hidden md:inline font-semibold">Back to Movie</span>
                 </button>
 
 
                 <h1 className="text-3xl font-bold mb-2">{showtime.movie.title}</h1>
                 <p className="text-gray-400 mb-8">{showtime.theater.name} - {showtime.screenName} | {new Date(showtime.startTime).toLocaleString()}</p>
 
-                <div className="bg-gray-900 p-8 rounded-2xl border border-gray-800 mb-8 flex justify-start md:justify-center overflow-x-auto min-h-[400px]">
+                <div className="bg-gray-900 p-2 md:p-8 rounded-2xl border border-gray-800 mb-24 md:mb-8 flex justify-center overflow-x-auto min-h-[50vh] md:min-h-[400px]">
                     <SeatingChart
                         seats={showtime.seats}
                         selectedSeats={selectedSeats}
@@ -269,24 +270,29 @@ const BookingPage = () => {
                     />
                 </div>
 
-                <div className="bg-black/90 p-4 md:p-8 rounded-2xl border border-gray-700 flex flex-col md:flex-row justify-between items-center shadow-2xl h-auto md:h-32 gap-4 md:gap-0 sticky bottom-4 z-30">
-                    <div className="w-full md:w-auto flex justify-between md:block items-center">
+                <div className="fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur-md p-3 md:p-8 border-t border-gray-800 flex flex-row justify-between items-center shadow-2xl z-50 md:sticky md:bottom-4 md:rounded-2xl md:border md:border-gray-700 md:bg-black/90 md:mx-auto md:max-w-7xl md:gap-0">
+                    <div className="flex flex-col">
+                        <p className="text-gray-400 text-xs md:text-lg mb-0 md:mb-1">Total Price</p>
+                        <div className="flex items-baseline gap-2">
+                            <p className="text-xl md:text-4xl font-extrabold text-white">₹{totalPrice}</p>
+                            <span className="text-xs text-gray-500 md:hidden">{selectedSeats.length} seats</span>
+                        </div>
+                    </div>
+
+                    <div className="hidden md:flex flex-col items-center">
                         <p className="text-gray-400 text-sm md:text-lg mb-0 md:mb-1">Selected Seats</p>
                         <p className="text-xl md:text-2xl font-bold text-white tracking-wide">{selectedSeats.length > 0 ? selectedSeats.map(s => s.seatNumber).join(', ') : 'None'}</p>
                     </div>
-                    <div className="w-full md:w-auto text-center px-0 md:px-8 border-t md:border-t-0 border-b md:border-b-0 md:border-x border-gray-700 py-2 md:py-0 flex justify-between md:block items-center">
-                        <p className="text-gray-400 text-sm md:text-lg mb-0 md:mb-1">Total Price</p>
-                        <p className="text-2xl md:text-4xl font-extrabold text-red-500">₹{totalPrice}</p>
-                    </div>
+
                     <button
                         onClick={handleBookClick}
                         disabled={selectedSeats.length === 0 || loading}
-                        className={`w-full md:w-auto h-12 md:h-16 px-10 rounded-xl font-bold text-lg md:text-xl text-white transition-all transform hover:scale-105 shadow-lg ${selectedSeats.length === 0
+                        className={`h-10 md:h-16 px-6 md:px-10 rounded-lg md:rounded-xl font-bold text-sm md:text-xl text-white transition-all transform shadow-lg ${selectedSeats.length === 0
                             ? 'bg-gray-800 opacity-50 cursor-not-allowed'
-                            : 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600'
+                            : 'bg-primary hover:bg-red-700 hover:scale-105'
                             }`}
                     >
-                        {loading ? 'Processing...' : 'Proceed to Book'}
+                        {loading ? 'Processing...' : 'Book Ticket'}
                     </button>
                 </div>
                 <div className="h-12"></div>
