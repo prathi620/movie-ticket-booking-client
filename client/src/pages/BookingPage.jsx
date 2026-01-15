@@ -261,7 +261,7 @@ const BookingPage = () => {
                 <h1 className="text-3xl font-bold mb-2">{showtime.movie.title}</h1>
                 <p className="text-gray-400 mb-8">{showtime.theater.name} - {showtime.screenName} | {new Date(showtime.startTime).toLocaleString()}</p>
 
-                <div className="bg-gray-900 p-8 rounded-2xl border border-gray-800 mb-8 flex justify-center">
+                <div className="bg-gray-900 p-8 rounded-2xl border border-gray-800 mb-8 flex justify-center overflow-x-auto min-h-[400px]">
                     <SeatingChart
                         seats={showtime.seats}
                         selectedSeats={selectedSeats}
