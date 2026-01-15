@@ -26,15 +26,23 @@ const SeatingChart = ({ seats, selectedSeats, onSeatSelect, disabled = false }) 
     const getSeatClass = (seat) => {
         const isSelected = selectedSeats.some(s => s.seatNumber === seat.seatNumber);
 
+        // Base classes
+        let classes = 'seat transition-all duration-200 flex items-center justify-center rounded-md md:rounded-lg';
+
+        // Size classes (mobile vs desktop)
+        classes += ' w-7 h-7 text-[10px] md:w-12 md:h-12 md:text-sm';
+
         if (seat.status === 'booked') {
-            return 'seat seat-booked';
+            classes += ' bg-slate-700 opacity-50 cursor-not-allowed';
         } else if (seat.status === 'locked') {
-            return 'seat seat-locked';
+            classes += ' bg-yellow-500 cursor-not-allowed';
         } else if (isSelected) {
-            return 'seat seat-selected';
+            classes += ' bg-indigo-600 shadow-[0_0_0_2px_#818cf8] text-white';
         } else {
-            return 'seat seat-available';
+            classes += ' bg-green-500 hover:bg-green-400 hover:scale-110';
         }
+
+        return classes;
     };
 
     const handleSeatClick = (seat) => {
@@ -90,18 +98,19 @@ const SeatingChart = ({ seats, selectedSeats, onSeatSelect, disabled = false }) 
                 )}
 
                 {rows.map(row => (
-                    <div key={row} className="flex items-center space-x-3">
+                    <div key={row} className="flex items-center space-x-1 md:space-x-3">
                         {/* Row Label */}
-                        <div className="w-8 text-center text-slate-400 font-bold text-lg">
+                        <div className="w-4 md:w-8 text-center text-slate-400 font-bold text-xs md:text-lg">
                             {String.fromCharCode(65 + parseInt(row))}
                         </div>
 
                         {/* Seats */}
-                        <div className="flex space-x-3">
+                        <div className="flex space-x-1 md:space-x-3">
                             {seatMap[row].map(seat => (
                                 <button
                                     key={seat.seatNumber}
                                     onClick={() => handleSeatClick(seat)}
+                                    // Tooltip logic remains...
                                     onMouseEnter={(e) => {
                                         const rect = e.target.getBoundingClientRect();
                                         const parentRect = e.target.closest('.relative').getBoundingClientRect();
@@ -113,24 +122,24 @@ const SeatingChart = ({ seats, selectedSeats, onSeatSelect, disabled = false }) 
                                     }}
                                     onMouseLeave={() => setHoveredSeat(null)}
                                     disabled={disabled || seat.status === 'booked' || seat.status === 'locked'}
-                                    className={`${getSeatClass(seat)} hover:scale-110 transition-transform duration-200 text-sm`}
+                                    className={getSeatClass(seat)}
                                     style={{
                                         backgroundColor: seat.type === 'vip' ? '#fbbf24' : seat.type === 'premium' ? '#a855f7' : '',
-                                        color: seat.type !== 'standard' ? 'white' : ''
+                                        color: (seat.type !== 'standard' || selectedSeats.some(s => s.seatNumber === seat.seatNumber)) ? 'white' : ''
                                     }}
                                 >
                                     {getSeatTypeIcon(seat.type)}
                                     {seat.type === 'standard' && (
-                                        <div className="w-full h-full flex items-center justify-center font-bold text-gray-700">
+                                        <span className="font-bold text-inherit opacity-90">
                                             {seat.col + 1}
-                                        </div>
+                                        </span>
                                     )}
                                 </button>
                             ))}
                         </div>
 
                         {/* Row Label (Right) */}
-                        <div className="w-8 text-center text-slate-400 font-bold text-lg">
+                        <div className="w-4 md:w-8 text-center text-slate-400 font-bold text-xs md:text-lg">
                             {String.fromCharCode(65 + parseInt(row))}
                         </div>
                     </div>
@@ -138,27 +147,27 @@ const SeatingChart = ({ seats, selectedSeats, onSeatSelect, disabled = false }) 
             </div>
 
             {/* Legend */}
-            <div className="flex flex-wrap justify-center gap-8 p-8 bg-slate-800/50 rounded-2xl">
-                <div className="flex items-center space-x-3">
-                    <div className="seat seat-available w-8 h-8 opacity-90" />
-                    <span className="text-lg text-slate-300">Available</span>
+            <div className="flex flex-wrap justify-center gap-3 md:gap-8 p-4 md:p-8 bg-slate-800/50 rounded-2xl">
+                <div className="flex items-center space-x-2 md:space-x-3">
+                    <div className="w-6 h-6 md:w-8 md:h-8 rounded md:rounded-lg bg-green-500 opacity-90" />
+                    <span className="text-xs md:text-lg text-slate-300">Available</span>
                 </div>
-                <div className="flex items-center space-x-3">
-                    <div className="seat seat-selected w-8 h-8 opacity-90" />
-                    <span className="text-lg text-slate-300">Selected</span>
+                <div className="flex items-center space-x-2 md:space-x-3">
+                    <div className="w-6 h-6 md:w-8 md:h-8 rounded md:rounded-lg bg-indigo-600 border-2 border-indigo-400 opacity-90" />
+                    <span className="text-xs md:text-lg text-slate-300">Selected</span>
                 </div>
 
-                <div className="flex items-center space-x-3">
-                    <div className="seat seat-booked w-8 h-8 opacity-90" />
-                    <span className="text-lg text-slate-300">Booked</span>
+                <div className="flex items-center space-x-2 md:space-x-3">
+                    <div className="w-6 h-6 md:w-8 md:h-8 rounded md:rounded-lg bg-slate-700 opacity-90" />
+                    <span className="text-xs md:text-lg text-slate-300">Booked</span>
                 </div>
-                <div className="flex items-center space-x-3">
-                    <span className="text-3xl">👑</span>
-                    <span className="text-lg text-slate-300">VIP</span>
+                <div className="flex items-center space-x-2 md:space-x-3">
+                    <span className="text-xl md:text-3xl">👑</span>
+                    <span className="text-xs md:text-lg text-slate-300">VIP</span>
                 </div>
-                <div className="flex items-center space-x-3">
-                    <span className="text-3xl">⭐</span>
-                    <span className="text-sm text-slate-300">Premium</span>
+                <div className="flex items-center space-x-2 md:space-x-3">
+                    <span className="text-xl md:text-3xl">⭐</span>
+                    <span className="text-xs md:text-lg text-slate-300">Premium</span>
                 </div>
             </div>
         </div>
