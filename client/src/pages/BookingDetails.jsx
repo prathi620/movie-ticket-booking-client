@@ -80,7 +80,7 @@ const BookingDetails = () => {
                 {/* Back Button (Fixed) */}
                 <button
                     onClick={() => navigate('/my-bookings')}
-                    className="fixed top-6 left-6 z-50 bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-lg flex items-center gap-2 text-white transition-all shadow-xl group font-semibold"
+                    className="fixed top-24 left-6 z-40 bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-lg flex items-center gap-2 text-white transition-all shadow-xl group font-semibold"
                 >
                     <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                     <span>Back to My Bookings</span>
@@ -213,7 +213,7 @@ const BookingDetails = () => {
                         <div className="flex flex-wrap gap-4">
                             <button
                                 onClick={handleDownloadTicket}
-                                className="flex-1 min-w-[200px] px-6 py-4 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all font-bold flex items-center justify-center gap-3 shadow-lg shadow-indigo-600/20 hover:shadow-indigo-600/40"
+                                className="w-full sm:w-auto px-8 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all font-bold flex items-center justify-center gap-3 shadow-lg shadow-indigo-600/20 hover:shadow-indigo-600/40"
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -225,40 +225,56 @@ const BookingDetails = () => {
                                 <button
                                     onClick={() => setShowConfirm(true)}
                                     disabled={cancelling}
-                                    className="flex-1 min-w-[200px] px-6 py-4 bg-red-500/10 text-red-500 border border-red-500/50 rounded-xl hover:bg-red-500/20 transition-all font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full sm:w-auto px-8 py-3 bg-red-500/10 text-red-500 border border-red-500/50 rounded-xl hover:bg-red-500/20 transition-all font-bold disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     Cancel Booking
                                 </button>
                             )}
 
-                            {showConfirm && (
-                                <div className="flex-1 min-w-[300px] p-4 bg-red-900/30 border border-red-500/30 rounded-xl flex flex-col gap-3">
-                                    <p className="text-red-300 font-semibold">Are you sure you want to cancel this booking? This action cannot be undone.</p>
-                                    <div className="flex gap-3">
-                                        <button
-                                            onClick={handleCancelBooking}
-                                            disabled={cancelling}
-                                            className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold disabled:opacity-50"
-                                        >
-                                            {cancelling ? 'Cancelling...' : 'Yes, Cancel'}
-                                        </button>
+                        </div>
+
+                        {/* Cancel Confirmation Modal */}
+                        {showConfirm && (
+                            <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 animate-fadeIn">
+                                <div className="bg-gray-900 rounded-2xl w-full max-w-md p-6 border border-gray-800 shadow-2xl transform scale-100 animate-slideIn">
+                                    <h3 className="text-xl font-bold text-white mb-2">Cancel Booking?</h3>
+                                    <p className="text-gray-400 mb-6">
+                                        Are you sure you want to cancel this booking? This action cannot be undone and the seats will be released.
+                                    </p>
+
+                                    <div className="flex gap-4">
                                         <button
                                             onClick={() => setShowConfirm(false)}
                                             disabled={cancelling}
-                                            className="flex-1 px-4 py-2 bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 transition-colors font-semibold disabled:opacity-50"
+                                            className="flex-1 py-3 bg-gray-800 text-white rounded-xl hover:bg-gray-700 transition-colors font-semibold disabled:opacity-50"
                                         >
                                             No, Keep it
                                         </button>
+                                        <button
+                                            onClick={handleCancelBooking}
+                                            disabled={cancelling}
+                                            className="flex-1 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors font-semibold disabled:opacity-50 flex justify-center items-center gap-2"
+                                        >
+                                            {cancelling ? (
+                                                <>
+                                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                                    <span>Cancelling...</span>
+                                                </>
+                                            ) : (
+                                                'Yes, Cancel'
+                                            )}
+                                        </button>
                                     </div>
                                 </div>
-                            )}
-                        </div>
+                            </div>
+                        )}
                     </div>
-
-
                 </div>
+
+
             </div>
         </div>
+
     );
 };
 
