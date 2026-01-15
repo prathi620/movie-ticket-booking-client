@@ -17,8 +17,8 @@ const Navbar = () => {
                 <div className="flex items-center justify-between h-20">
                     {/* Logo */}
                     <Link to="/" className="flex items-center">
-                        <span className="text-3xl font-bold text-red-600 tracking-tight">
-                            MovieBook
+                        <span className="text-2xl md:text-3xl font-bold text-red-600 tracking-tight">
+                            CineMovie
                         </span>
                     </Link>
 
@@ -26,7 +26,7 @@ const Navbar = () => {
                     <div className="flex items-center gap-8">
                         <Link
                             to="/"
-                            className="text-gray-300 hover:text-white transition-colors font-medium text-base"
+                            className="hidden md:block text-gray-300 hover:text-white transition-colors font-medium text-base"
                         >
                             Home
                         </Link>
