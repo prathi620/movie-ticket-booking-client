@@ -251,7 +251,7 @@ const BookingPage = () => {
                 {/* Back Button */}
                 <button
                     onClick={() => navigate(`/movie/${showtime.movie._id}`)}
-                    className="fixed top-6 left-6 z-50 bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-lg flex items-center gap-2 text-white transition-all shadow-xl group font-semibold"
+                    className="fixed top-24 left-6 z-40 bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-lg flex items-center gap-2 text-white transition-all shadow-xl group font-semibold"
                 >
                     <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                     <span>Back to Movie</span>
@@ -303,13 +303,7 @@ const BookingPage = () => {
                             </div>
 
                             <div className="space-y-3">
-                                <button
-                                    onClick={() => initiateBooking('card')}
-                                    className="w-full p-4 rounded-xl border border-gray-700 bg-gray-800/50 hover:bg-gray-800 hover:border-primary flex items-center justify-between group transition-all"
-                                >
-                                    <span className="font-medium text-white">Credit/Debit Card</span>
-                                    <span className="text-gray-500 group-hover:text-primary">&rarr;</span>
-                                </button>
+
                                 <button
                                     onClick={() => initiateBooking('upi')}
                                     className="w-full p-4 rounded-xl border border-gray-700 bg-gray-800/50 hover:bg-gray-800 hover:border-primary flex items-center justify-between group transition-all"
