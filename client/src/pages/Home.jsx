@@ -49,7 +49,7 @@ const Home = () => {
 
     return (
         <div className="min-h-screen bg-[#1a1d29]">
-            <div className="container mx-auto px-6 py-16 max-w-7xl">
+            <div className="container mx-auto px-4 md:px-6 py-8 md:py-16 max-w-7xl">
 
                 {/* Title */}
                 <h1 className="text-center text-4xl font-bold text-white mb-12">
@@ -57,7 +57,7 @@ const Home = () => {
                 </h1>
 
                 {/* Filter Bar */}
-                <div className="bg-[#0f1117] p-10 rounded-xl shadow-lg border border-gray-800 mb-16">
+                <div className="bg-[#0f1117] p-5 md:p-10 rounded-xl shadow-lg border border-gray-800 mb-10 md:mb-16">
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
                         {/* Search Input */}
                         <div className="md:col-span-4 flex flex-col gap-2">
