@@ -246,7 +246,7 @@ const BookingPage = () => {
     const totalPrice = selectedSeats.reduce((acc, s) => acc + s.price, 0);
 
     return (
-        <div className="min-h-screen bg-black text-white px-6 pt-24 pb-8">
+        <div className="min-h-screen bg-black text-white px-4 md:px-6 pt-24 pb-8">
             <div className="max-w-7xl mx-auto relative">
                 {/* Back Button */}
                 <button
