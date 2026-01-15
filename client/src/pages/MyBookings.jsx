@@ -25,7 +25,7 @@ const MyBookings = () => {
                 {/* Back Button */}
                 <button
                     onClick={() => navigate('/')}
-                    className="fixed top-6 left-6 z-50 bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-lg flex items-center gap-2 text-white transition-all shadow-xl group font-semibold"
+                    className="fixed top-24 left-6 z-40 bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-lg flex items-center gap-2 text-white transition-all shadow-xl group font-semibold"
                 >
                     <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                     <span>Back to Home</span>
